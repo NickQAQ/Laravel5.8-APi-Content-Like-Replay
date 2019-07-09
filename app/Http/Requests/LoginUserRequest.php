@@ -4,18 +4,22 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterUserRequest extends FormRequest
+class LoginUserRequest extends FormRequest
 {
     /**
-     *是否要验证身份 true 不需要验证 false 需要验证身份
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
-     * 定义规则
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
      */
     public function rules()
     {
@@ -34,7 +38,7 @@ class RegisterUserRequest extends FormRequest
         return [
 
             'name.required'      => '请填写用户名',
-            'name.min'           =>  '用户名小于3位',
+            'name.min'           => '用户名小于3位',
             'name.max'           => '用户名最多位20位',
             'name.unique'        => '此用户名已存在',
             'email.email'        => '请输入正确的邮箱格式',
