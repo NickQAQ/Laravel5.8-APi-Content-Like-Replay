@@ -21,4 +21,9 @@ class LoginController extends Controller
             dd($user);
         }
     }
+
+    public function loginOut()
+    {
+        //loginOut
+    }
 }

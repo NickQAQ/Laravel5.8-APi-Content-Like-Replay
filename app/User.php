@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Topice;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -38,8 +39,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function findForPassport($phone)
+    public function findForPassport($name)
     {
-        return $this->where('phone',$phone)->first();
+        return $this->where('name',$name)->first();
     }
+
+    //一个用户会有多个话题，用户和话题是一对多的关系
+    public function topics()
+    {
+        return $this->hasMany(Topice::class);
+    }
+
+    public function ownTopic($topic)
+    {
+        dd($this->id,$topic->user_id);
+        return $this->id === $topic->user_id;
+    }
+
 }

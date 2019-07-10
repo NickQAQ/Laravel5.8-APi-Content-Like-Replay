@@ -27,7 +27,7 @@ class RegisterController extends Controller
            ]);
 
 
-      //我这边使用了guzzle方式做了模拟请求，但是对网速要求有点高，这边你们可以自己尝试一下。
+      //我这边使用了guzzle方式做了模拟请求，但是对网速要求有点高，这边你们可以自己尝试一下。PS:我guzzle请求了三次三次time out
 //         $response = $this->client->post('http://conding.test/oauth/token', [
 //              'form_params' => [
 //                  'grant_type'      => 'password',

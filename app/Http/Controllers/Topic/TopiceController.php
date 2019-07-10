@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Topic;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTopicRequest;
+use App\Http\Requests\UpdateTopicRequest;
+use App\Http\Resources\TopicCollection;
+use App\Http\Resources\TopicResource;
 use App\Models\Topice;
 use Illuminate\Http\Request;
 
@@ -12,36 +15,38 @@ class TopiceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except(['index','show']);
+      //  $this->authorizeResource(Topice::class);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $topics = Topice::paginate(2);
+
+        return new TopicCollection($topics);
+    }
+    
+    
+    public function show(Topice $topice,Request $request)
+    {
+        $id = $request->topic;
+        $result = $topice::where('id',$id)->first();
+        return response()->json([
+            'data' => new TopicResource($result)
+        ],200);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreTopicRequest $request)
     {
         $result = Topice::create([
-            'title'     => $request->title,
-            'content'   => $request->title_content
+            'user_id'   => $request->user()->id,
+            'title'     => trim($request->title),
+            'content'   => $request->topic_content
         ]);
         if ($result){
             return response()->json([
-                'msg' => '创建成功',
-                'title' => $request->title
+                'msg'   => '创建成功',
+                'data' => new TopicResource($result)
             ],201);
         }
         return response()->json([
@@ -49,46 +54,26 @@ class TopiceController extends Controller
         ],400);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Topice  $topice
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Topice $topice)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Topice  $topice
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Topice $topice)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Topice  $topice
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Topice $topice)
+
+    public function update(UpdateTopicRequest $request, Topice $topice)
     {
-        //
+        //只有话题的创建者才能修改内容 其他的用户无法对话题进行修改  ---授权和鉴权--
+        $this->authorize('update',$topice);
+
+        $topice->title = $request->title;
+        $topice->content = $request->topic_content;
+        $topice->save();
+        return new TopicResource($topice);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Topice  $topice
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Topice $topice)
     {
         //
