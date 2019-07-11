@@ -50,10 +50,7 @@ class User extends Authenticatable
         return $this->hasMany(Topice::class);
     }
 
-    public function ownTopic($topic)
-    {
-        dd($this->id,$topic->user_id);
-        return $this->id === $topic->user_id;
-    }
+
+
 
 }

@@ -16,7 +16,6 @@ class TopiceController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-      //  $this->authorizeResource(Topice::class);
     }
 
     public function index()
@@ -66,8 +65,7 @@ class TopiceController extends Controller
     {
         //只有话题的创建者才能修改内容 其他的用户无法对话题进行修改  ---授权和鉴权--
         $this->authorize('update',$topice);
-
-        $topice->title = $request->title;
+        $topice->title   = $request->title;
         $topice->content = $request->topic_content;
         $topice->save();
         return new TopicResource($topice);
@@ -76,6 +74,10 @@ class TopiceController extends Controller
 
     public function destroy(Topice $topice)
     {
-        //
+        $this->authorize('delete',$topice);
+
+        $topice->delete();
+
+        return response()->json(null,204);
     }
 }
