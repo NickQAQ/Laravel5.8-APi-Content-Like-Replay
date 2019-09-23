@@ -14,3 +14,17 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::any('/word','WordController@toWord')->name('write.word');
+Route::any('/openWord','WordController@openWord');
+Route::any('/testword','WordController@test');
+
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
