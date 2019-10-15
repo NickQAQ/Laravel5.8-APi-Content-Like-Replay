@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Models\Note;
 use App\Models\Topice;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use Mockery\Matcher\Not;
 
 class User extends Authenticatable
 {
@@ -18,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','mobile','url'
     ];
 
     /**
@@ -48,6 +50,11 @@ class User extends Authenticatable
     public function topics()
     {
         return $this->hasMany(Topice::class);
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
     }
 
 

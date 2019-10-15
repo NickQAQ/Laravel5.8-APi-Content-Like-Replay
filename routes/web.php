@@ -19,12 +19,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::any('/word','WordController@toWord')->name('write.word');
-Route::any('/openWord','WordController@openWord');
-Route::any('/testword','WordController@test');
+Route::any('/upload','UploadController@upload')->name('upload.qiniu');
 
 
+Route::group(['namespace'=>'User'],function (){
+    Route::any('/user/register','RegisterController@register')->name('write.user.register');
+});
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::any('/test','User\RegisterController@test');
+Route::any('/note/index','NoteController@index');
