@@ -8,5 +8,6 @@ Route::group(['namespace'=>'User'],function(){
 
 });
 
+Route::any('/test','User\RegisterController@test')->name('test');
 Route::apiResource('/topic','Topic\TopiceController');
 

@@ -16,6 +16,7 @@ class TopiceController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
+        $this->authorizeResource(Topice::class);
     }
 
     public function index()
@@ -44,7 +45,7 @@ class TopiceController extends Controller
         ]);
         if ($result){
             return response()->json([
-                'msg'   => '创建成功',
+                'message'   => '创建成功',
                 'data' => new TopicResource($result)
             ],201);
         }
@@ -64,7 +65,7 @@ class TopiceController extends Controller
     public function update(UpdateTopicRequest $request, Topice $topice)
     {
         //只有话题的创建者才能修改内容 其他的用户无法对话题进行修改  ---授权和鉴权--
-        $this->authorize('update',$topice);
+        //$this->authorize('update',$topice);
         $topice->title   = $request->title;
         $topice->content = $request->topic_content;
         $topice->save();

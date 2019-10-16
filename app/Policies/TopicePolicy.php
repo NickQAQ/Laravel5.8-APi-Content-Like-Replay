@@ -6,7 +6,7 @@ use App\User;
 use App\Models\Topice;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TopicPolicy
+class TopicePolicy
 {
     use HandlesAuthorization;
 
@@ -18,7 +18,7 @@ class TopicPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+       //
     }
 
     /**
@@ -28,7 +28,7 @@ class TopicPolicy
      * @param  \App\Models\Topice  $topice
      * @return mixed
      */
-    public function view(User $user, Topice $topice)
+    public function show(User $user, Topice $topice)
     {
         return true;
     }
@@ -53,9 +53,7 @@ class TopicPolicy
      */
     public function update(User $user, Topice $topice)
     {
-
         return true;
-//        return $user->id === $topice->user_id;
     }
 
     /**
@@ -93,5 +91,4 @@ class TopicPolicy
     {
         return true;
     }
-
 }

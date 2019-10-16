@@ -41,9 +41,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function findForPassport($name)
+    //用户使用手机号码进行登录
+    public function findForPassport($mobile)
     {
-        return $this->where('name',$name)->first();
+        return $this->where('mobile',$mobile)->first();
     }
 
     //一个用户会有多个话题，用户和话题是一对多的关系
@@ -57,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(Note::class);
     }
 
+    //判断话题修改操作是否为本人
+    public function OwnTopic($topic)
+    {
+        return $this->id === $topic->user_id;
+    }
 
 
 
