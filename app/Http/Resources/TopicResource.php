@@ -13,8 +13,8 @@ class TopicResource extends JsonResource
 
           'title'    => $this->title,
           'author'   => $this->user->name,
-          'content'  => $this->content
-
+          'content'  => $this->content,
+          'discussions' => DiscussionsResource::collection($this->discussions)
         ];
     }
 }

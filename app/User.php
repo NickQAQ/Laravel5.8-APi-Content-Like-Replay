@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Models\Discussions;
+use App\Models\Like;
 use App\Models\Note;
-use App\Models\Topice;
+use App\Models\Topic;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +14,8 @@ use Mockery\Matcher\Not;
 
 class User extends Authenticatable
 {
+
+
     use HasApiTokens, Notifiable;
 
     /**
@@ -50,18 +54,30 @@ class User extends Authenticatable
     //一个用户会有多个话题，用户和话题是一对多的关系
     public function topics()
     {
-        return $this->hasMany(Topice::class);
+        return $this->hasMany(Topic::class);
     }
 
+    //用户与笔记表的关系为一对多 笔记属于用户
     public function notes()
     {
         return $this->hasMany(Note::class);
     }
 
     //判断话题修改操作是否为本人
-    public function OwnTopic($topic)
+    public function ownsTopic($topic)
     {
-        return $this->id === $topic->user_id;
+        //我无法获得topic表中的user_id 如果让前端传递那么久不够优雅了 我应该如何获得附属表中的用户id
+        return auth('api')->user()->id === $topic->user;
+    }
+
+    public function discussions()
+    {
+        return $this->hasMany(Discussions::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class,'likeable');
     }
 
 

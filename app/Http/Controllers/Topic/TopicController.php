@@ -7,38 +7,39 @@ use App\Http\Requests\StoreTopicRequest;
 use App\Http\Requests\UpdateTopicRequest;
 use App\Http\Resources\TopicCollection;
 use App\Http\Resources\TopicResource;
-use App\Models\Topice;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 
-class TopiceController extends Controller
+class TopicController extends Controller
 {
 
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-        $this->authorizeResource(Topice::class);
     }
 
     public function index()
     {
-        $topics = Topice::paginate(2);
+        $topics = Topic::paginate(2);
 
         return new TopicCollection($topics);
     }
     
     
-    public function show(Topice $topice,Request $request)
+    public function show(Topic $topic,Request $request)
     {
-        $id = $request->topic;
-        $result = $topice::where('id',$id)->first();
-        return response()->json([
-            'data' => new TopicResource($result)
-        ],200);
+        //为什么这样就直接查询了？？？
+        $result = $request->topic;
+
+
+        return new TopicResource($result);
     }
 
     public function store(StoreTopicRequest $request)
     {
-        $result = Topice::create([
+//        $user = new User();
+//        dd($user->ownsTopic(11));
+        $result = Topic::create([
             'user_id'   => $request->user()->id,
             'title'     => trim($request->title),
             'content'   => $request->topic_content
@@ -56,28 +57,30 @@ class TopiceController extends Controller
 
 
 
-    public function edit(Topice $topice)
+    public function edit(Topic $topic)
     {
         //
     }
 
 
-    public function update(UpdateTopicRequest $request, Topice $topice)
+    public function update(UpdateTopicRequest $request, Topic $topic)
     {
+        //todo 此处有问题 具体问题在User Model 中的ownsTopic 详注
         //只有话题的创建者才能修改内容 其他的用户无法对话题进行修改  ---授权和鉴权--
-        //$this->authorize('update',$topice);
-        $topice->title   = $request->title;
-        $topice->content = $request->topic_content;
-        $topice->save();
-        return new TopicResource($topice);
+        $this->authorize('update',$topic);
+        $topic->title   = $request->title;
+        $topic->content = $request->topic_content;
+        $topic->user_id = $request->user()->id;
+        $topic->where('id',$request->topice)->update($topic);
+        return new TopicResource($topic);
     }
 
 
-    public function destroy(Topice $topice)
+    public function destroy(Topic $topic,Request $request)
     {
-        $this->authorize('delete',$topice);
+        $this->authorize('delete',$topic);
 
-        $topice->delete();
+        $topic->where('id',$request->topic)->delete();
 
         return response()->json(null,204);
     }

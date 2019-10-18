@@ -16,8 +16,11 @@ class CreateLikeTable extends Migration
         Schema::create('like', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->index()->comment('user表的主键id 用于关联');
-            $table->unsignedBigInteger('topices_id')->index()->comment('topices表的主键id 用于关联');
+            $table->unsignedInteger('like_id')->index();
+            $table->string('like_type')->comment('喜欢的类型');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

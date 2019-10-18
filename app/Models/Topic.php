@@ -5,9 +5,9 @@ namespace App\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Topice extends Model
+class Topic extends Model
 {
-    protected $table = 'topices';
+    protected $table = 'topics';
 
      protected $fillable = ['user_id','title','content'];
 
@@ -17,4 +17,10 @@ class Topice extends Model
      public function user(){
          return $this->belongsTo(User::class);
      }
+
+    public function discussions()
+    {
+        return $this->hasMany(Discussions::class);
+     }
+
 }

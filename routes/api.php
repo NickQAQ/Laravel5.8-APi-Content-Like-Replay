@@ -9,5 +9,14 @@ Route::group(['namespace'=>'User'],function(){
 });
 
 Route::any('/test','User\RegisterController@test')->name('test');
-Route::apiResource('/topic','Topic\TopiceController');
+Route::apiResource('/topic','Topic\TopicController');
+
+
+Route::group(['namespace'=>'Discussions'],function (){
+
+    Route::get('/discussions/show','DiscussionsController@show');
+    Route::post('/discussions/store','DiscussionsController@store');
+    Route::delete('/discussions/destroy','DiscussionsController@destroy');
+
+});
 
